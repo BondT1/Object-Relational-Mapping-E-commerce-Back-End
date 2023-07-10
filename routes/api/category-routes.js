@@ -10,9 +10,9 @@ router.get('/', (req, res) => {
       include: [Product]
     })
     .then(catData => res.json(catData))
-    .catch(err => {
-      console.log(err)
-      res.status(500).json(err);
+    .catch(error => {
+      console.log(error)
+      res.status(500).json(error);
     })
 });
 
@@ -25,27 +25,66 @@ Category
   })
   .then(catData => {
     if (!catData) {
-      res.status(404).json({ message: "category id not valid." });
+      res.status(404).json({ message: 'Category id invalid.' });
       return;
     }
     res.json(catData)
   })
-  .catch(err => {
+  .catch(error => {
     console.log(error);
-    res.status(500).json(err);
+    res.status(500).json(error);
   });
 });
 
 router.post('/', (req, res) => {
-  // create a new category
+  console.log('Category created');
+  Category
+    .create(req.body)
+    .then(catData => res.json(catData))
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+  console.log('Category id updated.');
+  Category
+    .update(req.body, {
+      where: { id: req.params.id }
+    })
+    .then(catData => {
+      if (!catData) {
+        res.status(404).json({ message: 'Category id invalid.' });
+        return;
+      }
+      res.json({ message: 'Category updated.' });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
+  console.log('Category deleted');
+  Category
+    .destroy({
+      where: { id: req.params.id }
+    })
+    .then(catData => {
+      if (!catData) {
+        res.status(404).json({ message: 'id invalid.' });
+        return;
+      }
+      res.json({ message: 'Category deleted.' });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 module.exports = router;
+
+
