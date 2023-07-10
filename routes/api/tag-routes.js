@@ -19,8 +19,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
   console.log('Tag id read');
   Tag
     .findOne({
@@ -41,15 +39,51 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // create a new tag
+  console.log('Tag created');
+  Tag
+    .create(req.body)
+    .then(TData => res.json(TData))
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
+  console.log('Tag id updated');
+  Tag
+    .update(req.body, {
+      where: { id: req.params.id }
+    })
+    .then(TData => {
+      if (!TData) {
+        res.status(404).json({ message: 'Invalid tag id.' });
+        return;
+      }
+      res.json({ message: 'Tag updated.' });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+  console.log('Tag id deleted');
+  Tag.destroy({
+    where: { id: req.params.id }
+  })
+    .then(TData => {
+      if (!TData) {
+        res.status(404).json({ message: 'Tag id invalid' });
+        return;
+      }
+      res.json({ message: 'Tag deleted' });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 module.exports = router;
