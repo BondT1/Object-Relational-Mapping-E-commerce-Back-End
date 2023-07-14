@@ -8,11 +8,12 @@ router.get('/', (req, res) => {
   Category
     .findAll({
       include: [Product]
-    })
+    })   
     .then(catData => res.json(catData))
     .catch(error => {
       console.log(error)
       res.status(500).json(error);
+      
     })
 });
 
